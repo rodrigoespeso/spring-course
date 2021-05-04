@@ -1,0 +1,18 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<!-- Here we got to configure that the request must go to the DispactcherServlet -->
+<web-app>
+	<servlet>
+		<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+	</servlet>
+	<servlet-mapping>
+	<!-- Map all requests ("/") to the DispatcherServlet for handling -->
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>
