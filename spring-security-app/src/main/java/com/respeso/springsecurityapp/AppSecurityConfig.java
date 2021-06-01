@@ -1,47 +1,27 @@
 package com.respeso.springsecurityapp;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Sso
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//	@Bean
-//	@Override
-//	protected UserDetailsService userDetailsService() {
-//		List<UserDetails> users = new ArrayList<>();
-//		users.add(User.withDefaultPasswordEncoder()
-//				.username("rec")
-//				.password("rec")
-//				.roles("USER")
-//				.build()); // Provisional, for learning purpose. We dont use it
-//		
-//		return new InMemoryUserDetailsManager(users);
-//	}
-	
-	@Autowired
-	private UserDetailsService userDetailsService; // service layer
-	
-	@Bean
-	public AuthenticationProvider authProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(); // Provider -> Service Layer -> DB Layer or DAO (as well as Controller - Service - DAO)
-		provider.setUserDetailsService(userDetailsService);
-//		provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance()); // provisional, plain text not good
-		/*
-		 * Must use hash, but it is crackeable.
-		 * We can use multiple rounds to encrypt passwords with BCrypt
-		 */
-		provider.setPasswordEncoder(new BCryptPasswordEncoder());
-		return provider;
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests().antMatchers("/login").permitAll()
+		.anyRequest().authenticated();
+		
 	}
 
 }
